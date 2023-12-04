@@ -1,9 +1,9 @@
 import os
 import sys
 from typing import List
+from aocd import get_data, submit
 
-with open("input.txt") as f:
-    lines = f.read()
+lines = get_data(day=4, year=2023)
 
 pointsWon = 0
 
@@ -36,3 +36,4 @@ for num, winning, have in data:
 
 
 print(sum(copies))
+submit(sum(copies), part="b", day=4, year=2023)
