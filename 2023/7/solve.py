@@ -4,7 +4,7 @@ import sys
 from typing import List
 from aocd import get_data, submit
 
-# lines = get_data(day=7, year=2023)
+lines = get_data(day=7, year=2023)
 
 
 all_cards = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "K", "Q", "A"]
@@ -57,7 +57,7 @@ def hand_weight_single(h):
     return 1
 
 
-def card_weight(c):
+def card_weight_a(c):
     if c == "A":
         return 14
     if c == "K":
@@ -65,16 +65,26 @@ def card_weight(c):
     if c == "Q":
         return 12
     if c == "J":
-        # return 11
-        return 1
+        return 11
     if c == "T":
         return 10
 
     return int(c)
 
 
-with open(os.path.join(sys.path[0], "input.txt")) as f:
-    lines = f.read()
+def card_weight_b(c):
+    if c == "A":
+        return 14
+    if c == "K":
+        return 13
+    if c == "Q":
+        return 12
+    if c == "J":
+        return 1
+    if c == "T":
+        return 10
+
+    return int(c)
 
 
 def parse_input(s):
@@ -84,19 +94,26 @@ def parse_input(s):
     return bids
 
 
-def sortingKey(x):
+def sortingKey_a(x):
     key = x["weight"]
     for i in range(5):
-        key = key * 100 + card_weight(x["hand"][i])
+        key = key * 100 + card_weight_a(x["hand"][i])
+    return key
+
+
+def sortingKey_b(x):
+    key = x["weight"]
+    for i in range(5):
+        key = key * 100 + card_weight_b(x["hand"][i])
     return key
 
 
 def solve_a(data):
     d = data
     for i in range(len(d)):
-        d[i]["weight"] = hand_weight(d[i]["hand"])
+        d[i]["weight"] = hand_weight_single(d[i]["hand"])
 
-    d.sort(key=sortingKey, reverse=True)
+    d.sort(key=sortingKey_a, reverse=True)
     d.reverse()
 
     total = 0
@@ -107,11 +124,22 @@ def solve_a(data):
 
 
 def solve_b(data):
-    return 0
+    d = data
+    for i in range(len(d)):
+        d[i]["weight"] = hand_weight(d[i]["hand"])
+
+    d.sort(key=sortingKey_b, reverse=True)
+    d.reverse()
+
+    total = 0
+    for i in range(len(d)):
+        total += (i + 1) * int(d[i]["bid"])
+
+    return total
 
 
 data = parse_input(lines)
 print(solve_a(data))
 
-# submit(solve_a(data), part="a", day=7, year=2023)
-# submit(solve_a(data), part="b", day=7, year=2023)
+submit(solve_a(data), part="a", day=7, year=2023)
+submit(solve_b(data), part="b", day=7, year=2023)
