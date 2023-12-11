@@ -80,8 +80,6 @@ def paint(m, loop, current, prevs, confs):
     if current in prevs:
         return confs
 
-    if current == (1, 1):
-        print("DICK", m[current[0]][current[1]])
     for di in m[current[0]][current[1]]:
         if di in prevs:
             continue
