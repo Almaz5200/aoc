@@ -13,6 +13,8 @@ lines = get_data(day=day, year=2023)
 
 sys.setrecursionlimit(100000000)
 
+# My solution is insanely slow, but it works and I'm too lazy to optimize it for now
+
 
 def parse_input(s):
     brs = []
