@@ -1,4 +1,4 @@
-advent-of-code-data==2.0.1
+advent-of-code-data==2.0.4
 aocd-example-parser==2023.12.2
 beautifulsoup4==4.12.2
 Pebble==5.0.4
