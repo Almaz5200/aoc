@@ -4,7 +4,7 @@ import sys
 import copy
 from typing import List
 
-# from aocd import get_data, submit
+from aocd import get_data, submit
 from collections import defaultdict, deque, Counter
 import re
 
@@ -141,7 +141,7 @@ def solve_b(raw_data):
     return ans
 
 
-with open("test_input.txt", "r") as f:
+with open("2024/6/test_input.txt", "r") as f:
     test_data = f.read().strip()
 
 if len(test_data) > 0:
