@@ -7,6 +7,7 @@ from typing import List
 from aocd import get_data, submit
 from collections import defaultdict, deque, Counter
 import re
+from ..tools import adj4, adj8, nums, valPos, grid, fgrid
 
 day = 6
 lines = get_data(day=day, year=2024)
@@ -15,29 +16,20 @@ sys.setrecursionlimit(100000000)
 
 
 def prep_data(raw_data):
-    return [list(x) for x in raw_data.strip().split("\n")]
+    return grid(raw_data)
 
 
 def solve_a(raw_data):
-    data = prep_data(raw_data)
-    R, C = len(data), len(data[0])
+    data, R, C = prep_data(raw_data)
 
-    guard_pos = (0, 0)
-    for r in range(R):
-        for c in range(C):
-            if data[r][c] == "^":
-                guard_pos = (r, c)
-                break
+    guard_pos = fgrid(data, "^")
+    if not guard_pos:
+        return -1
 
     sdir = set()
     splace = set()
 
-    dirs = [
-        (-1, 0),
-        (0, 1),
-        (1, 0),
-        (0, -1),
-    ]
+    dirs = adj4
     dir = 0
 
     while 0 <= guard_pos[0] < R and 0 <= guard_pos[1] < C:
@@ -63,12 +55,7 @@ def haveLoop(data, guard_pos):
     sdir = set()
     splace = set()
 
-    dirs = [
-        (-1, 0),
-        (0, 1),
-        (1, 0),
-        (0, -1),
-    ]
+    dirs = adj4
     dir = 0
 
     loop = False
@@ -91,18 +78,13 @@ def haveLoop(data, guard_pos):
 
 
 def solve_b(raw_data):
-    data = prep_data(raw_data)
-    R, C = len(data), len(data[0])
+    data, R, C = prep_data(raw_data)
     ans = 0
 
-    ini_guard_pos = (0, 0)
-    for r in range(R):
-        for c in range(C):
-            if data[r][c] == "^":
-                ini_guard_pos = (r, c)
-                break
+    ini_guard_pos = fgrid(data, "^")
 
     guard_pos = ini_guard_pos
+    assert guard_pos is not None
 
     sdir = set()
     splace = set()

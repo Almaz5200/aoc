@@ -29,3 +29,19 @@ def nums(str, separator=None):
 
 def valPos(r, c, R, C):
     return r in range(R) and c in range(C)
+
+
+def grid(input):
+    input = input.strip().split("\n")
+    R, C = len(input), len(input[0])
+
+    return [list(x) for x in input], R, C
+
+
+def fgrid(grid, target):
+    for r in range(len(grid)):
+        for c in range(len(grid)):
+            if grid[r][c] == target:
+                return (r, c)
+
+    return None
