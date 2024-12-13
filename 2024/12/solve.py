@@ -123,7 +123,6 @@ def solve_b(raw_data):
                         S.add((nrr, nc))
                         Q.append((nrr, nc))
 
-            print(area, per, data[r][c])
             ans += area * per
 
     return ans
