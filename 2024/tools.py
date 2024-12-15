@@ -1,4 +1,5 @@
 # Usefull tools to sometimes use!
+import re
 
 adj4 = [
     (-1, 0),
@@ -20,11 +21,16 @@ adj8 = [
 
 def nums(str, separator=None):
     if separator is None:
-        for char in str:
-            if not char.isdigit() and not char == "-":
-                separator = char
-                break
-    return list(map(int, str.strip().split(separator)))
+        result = []
+        rx = r"-?\d+"
+        for match in re.findall(rx, str):
+            try:
+                result.append(int(match))
+            except:
+                print("WARN: Cast failed")
+        return result
+    else:
+        return list(map(int, str.strip().split(separator)))
 
 
 def valPos(r, c, R, C):
