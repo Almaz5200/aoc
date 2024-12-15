@@ -21,10 +21,10 @@ adj8 = [
 def nums(str, separator=None):
     if separator is None:
         for char in str:
-            if not char.isdigit():
+            if not char.isdigit() and not char == "-":
                 separator = char
                 break
-    return list(map(int, str.split(separator)))
+    return list(map(int, str.strip().split(separator)))
 
 
 def valPos(r, c, R, C):
