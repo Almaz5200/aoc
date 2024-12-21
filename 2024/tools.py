@@ -46,7 +46,7 @@ def grid(input):
 
 def fgrid(grid, target):
     for r in range(len(grid)):
-        for c in range(len(grid)):
+        for c in range(len(grid[0])):
             if grid[r][c] == target:
                 return (r, c)
 
