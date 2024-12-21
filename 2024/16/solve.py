@@ -6,7 +6,7 @@ from typing import List
 from aocd import get_data, submit
 from collections import defaultdict, deque, Counter
 import re
-from ..tools import adj4, adj8, nums, valPos, grid, fgrid
+from ..tools import adj4, adj8, nums, valPos, fgrid, Grid
 from heapq import heappush, heappop
 
 day = 16
@@ -16,47 +16,47 @@ sys.setrecursionlimit(100000000)
 
 
 def prep_data(raw_data):
-    # return raw_data.strip()
-    return grid(raw_data)
+    data = Grid(raw_data)
+    data.walls = ["#"]
+    return data
 
 
 def solve_a(raw_data):
-    data, R, C = prep_data(raw_data)
+    data = prep_data(raw_data)
     ans = 0
 
-    S = fgrid(data, "S")
-    E = fgrid(data, "E")
+    S = data.find("S")
+    E = data.find("E")
 
     assert S and E
 
-    H = [(0, S[0], S[1], (0, 1))]
+    H = [(0, S, (0, 1))]
 
     seen = set()
     while H:
-        cost, r, c, dir = heappop(H)
-        if (r, c) in seen:
+        cost, pos, dir = heappop(H)
+        if pos in seen:
             continue
-        seen.add((r, c))
+        seen.add(pos)
 
-        if data[r][c] == "E":
+        if data[pos] == "E":
             return cost
 
-        for dr, dc in adj4:
-            ncost = cost + (1 if (dir == (dr, dc) or dir == None) else 1001)
-            nr, nc = r + dr, c + dc
-            if (nr, nc) in seen or not valPos(nr, nc, R, C) or data[r][c] == "#":
+        for ndir, npos, _ in data.dirAdj4(pos):
+            ncost = cost + (1 if (dir == ndir or dir is None) else 1001)
+            if npos in seen:
                 continue
-            heappush(H, (ncost, nr, nc, (dr, dc)))
+            heappush(H, (ncost, npos, ndir))
 
     return ans
 
 
 def solve_b(raw_data):
-    data, R, C = prep_data(raw_data)
+    data = prep_data(raw_data)
     ans = 0
 
-    S = fgrid(data, "S")
-    E = fgrid(data, "E")
+    S = data.find("S")
+    E = data.find("E")
 
     assert S and E
 
@@ -67,45 +67,42 @@ def solve_b(raw_data):
             return Ca[E]
         if St == E:
             return 0, odir
-        H = [(0, St[0], St[1], odir)]
+        H = [(0, St, odir)]
 
         seen = set()
         while H:
-            cost, r, c, dir = heappop(H)
-            if (r, c) in seen:
+            cost, pos, dir = heappop(H)
+            if pos in seen:
                 continue
-            seen.add((r, c))
+            seen.add(pos)
 
             if St == S:
-                Ca[(r, c)] = (cost, dir)
+                Ca[pos] = (cost, dir)
 
-            if (r, c) == E:
+            if pos == E:
                 return cost, dir
 
-            for dr, dc in adj4:
-                ncost = cost + (1 if (dir == (dr, dc) or dir == None) else 1001)
-                nr, nc = r + dr, c + dc
-                if (nr, nc) in seen or not valPos(nr, nc, R, C) or data[r][c] == "#":
+            for ndir, npos, _ in data.dirAdj4(pos):
+                ncost = cost + (1 if (dir == ndir or dir == None) else 1001)
+                if npos in seen:
                     continue
-                heappush(H, (ncost, nr, nc, (dr, dc)))
+                heappush(H, (ncost, npos, ndir))
 
         return 0, (0, 0)
 
     target, _ = shortPath(S, E, (0, 1))
     total = {}
 
-    for r in range(R):
-        print(r, R)
-        for c in range(C):
-            if data[r][c] == "#":
-                continue
-            a, dr = shortPath(S, (r, c), (0, 1))
-            # print(a)
-            path = a + shortPath((r, c), E, dr)[0]
-            total[(r, c)] = path
-            if path <= target:
-                assert path == target
-                ans += 1
+    for pos, val in data:
+        if val == "#":
+            continue
+        a, dr = shortPath(S, pos, (0, 1))
+        # print(a)
+        path = a + shortPath(pos, E, dr)[0]
+        total[pos] = path
+        if path <= target:
+            assert path == target
+            ans += 1
 
     return ans
 
